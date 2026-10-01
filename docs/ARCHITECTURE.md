@@ -1,4 +1,6 @@
-# Architecture
+# macOS architecture
+
+This document describes the original macOS application. See [Windows architecture and distribution](WINDOWS.md) for the separate C#/WPF application and its release pipeline.
 
 Parvathi is a native macOS application with a testable core and narrow operating-system service boundaries. Its central rule is that a mode chosen by the user determines how the transcript is interpreted.
 

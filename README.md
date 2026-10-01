@@ -22,6 +22,10 @@ Verbatim dictation and computer commands need no paid AI key. Polished text, Ask
 
 See **[Windows setup, privacy, architecture, troubleshooting, and acceptance checklist](docs/WINDOWS.md)** and the **[updated interview guide](docs/Parvathi-Interview-Guide.pdf)**. Live Windows microphone, cross-application, and authenticated-provider checks remain explicitly unverified; compiled code and CI tests are not a substitute for those checks.
 
+![Parvathi Windows WPF dashboard](docs/windows-dashboard.png)
+
+*Rendered by the actual packaged WPF application on the Windows CI runner. Live microphone acceptance is recorded separately.*
+
 The sections below describe the macOS application; Windows commands and platform-specific behavior are documented in the Windows guide.
 
 ![Parvathi native SwiftUI dashboard](docs/dashboard.png)

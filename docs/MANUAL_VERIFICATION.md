@@ -1,4 +1,6 @@
-# Manual verification
+# macOS manual verification
+
+For Windows package evidence and the separate live acceptance checklist, see [Windows verification](WINDOWS.md#verification-ledger-and-manual-acceptance).
 
 This checklist tests the real integrations. Unit tests, successful compilation, and process launch are not substitutes for live microphone-to-editor evidence. Leave an item **Not run** unless its actual behavior was observed.
 
