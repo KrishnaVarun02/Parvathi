@@ -1,4 +1,4 @@
-<Window x:Class="Parvathi.Windows.Views.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:Parvathi.Windows.Views" Title="Parvathi" Width="980" Height="780" MinWidth="780" MinHeight="620" WindowStartupLocation="CenterScreen" Icon="/Assets/Parvathi.ico">
+<Window Style="{StaticResource {x:Type Window}}" x:Class="Parvathi.Windows.Views.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:Parvathi.Windows.Views" Title="Parvathi" Width="980" Height="780" MinWidth="780" MinHeight="620" WindowStartupLocation="CenterScreen" Icon="/Assets/Parvathi.ico">
   <Grid Margin="30">
     <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
     <Grid Margin="0,0,0,24"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>

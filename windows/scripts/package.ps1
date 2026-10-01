@@ -46,7 +46,7 @@ Use the Dictate shortcut in a supported editable field. Command mode is separate
 
 Automated release gates cover Core tests, Windows adapter tests, package contents, native recognition-library loading, portable launch, installer installation/upgrade/uninstallation and WPF preview rendering. These checks do not prove microphone capture, recognition accuracy, real Notepad insertion, global shortcuts on an interactive desktop, authenticated provider calls, or speech output; those require manual Windows acceptance testing. See docs/WINDOWS.md and docs/MANUAL_VERIFICATION.md in the repository.
 
-This repository is private. Downloaders need repository access. No repository visibility change is required.
+This repository and these release downloads are public. No GitHub account is required to download the installer or portable ZIP.
 
 SHA256SUMS.txt contains the installer and ZIP digests. Keep Windows security enabled. For unsigned builds, the publisher identity is not verified by Authenticode and SmartScreen may show a warning.
 "@

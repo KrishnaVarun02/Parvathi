@@ -4,7 +4,7 @@ Parvathi's Windows implementation is a native WPF application for Windows 11 x64
 
 ## Install and first run
 
-1. Sign in to GitHub with an account that can access this private repository.
+1. Visit the public GitHub repository; no account is required to download the application.
 2. Open [Windows release v0.2.0-windows.1](https://github.com/KrishnaVarun02/Parvathi/releases/tag/v0.2.0-windows.1), expand Assets, and download `Parvathi-Setup-0.2.0-win-x64.exe`.
 3. Run the installer for your Windows user. Administrative privileges are not required. Choose whether to add a desktop shortcut, then launch **Parvathi** from Start.
 4. In Settings, choose the offline model download button. This explicitly connects to `alphacephei.com` and downloads **41,205,931 bytes** (39.3 MiB); installed model data is approximately 67.6 MiB. Progress is visible; **Cancel download** cancels this operation. The downloaded archive must match the pinned SHA-256 before extraction.
@@ -132,14 +132,14 @@ The SDK and NuGet dependency graph are pinned and lock files are committed. Pack
 
 `windows-ci.yml` builds, tests, and packages Windows independently of the preserved Mac CI. `windows-release.yml` publishes from a version tag or an explicit manual trigger. Assets come from the exact tagged commit. The release is created only after successful build, tests, package checks, and checksums; uploaded workflow artifacts alone are not the app's download channel.
 
-The release assets are `Parvathi-Setup-0.2.0-win-x64.exe`, `Parvathi-0.2.0-win-x64-portable.zip`, and `SHA256SUMS.txt`, accompanied by release notes. Optional Authenticode signing uses `WINDOWS_SIGNING_CERT_BASE64` and `WINDOWS_SIGNING_PASSWORD` GitHub secrets, with the `WINDOWS_SIGNING_TIMESTAMP_URL` repository variable for the timestamp service. Without signing credentials, release notes identify an unsigned prerelease. The repository's visibility is unchanged: downloads require repository access.
+The release assets are `Parvathi-Setup-0.2.0-win-x64.exe`, `Parvathi-0.2.0-win-x64-portable.zip`, and `SHA256SUMS.txt`, accompanied by release notes. Optional Authenticode signing uses `WINDOWS_SIGNING_CERT_BASE64` and `WINDOWS_SIGNING_PASSWORD` GitHub secrets, with the `WINDOWS_SIGNING_TIMESTAMP_URL` repository variable for the timestamp service. Without signing credentials, release notes identify an unsigned prerelease. The repository is public, and anyone can download the release assets without a GitHub account.
 
 ## Troubleshooting
 
 | Symptom | Action |
 | --- | --- |
 | No microphone / access denied | Enable Windows microphone access and desktop-app access; select a connected input; close exclusive users of that microphone |
-| Missing offline model | Click Download English model; allow the official host through your network policy; retry after a connection failure |
+| Missing offline model | Click Download / repair model; allow the official host through your network policy; retry after a connection failure |
 | Integrity verification failed | Retry the explicit model download to repair the installation; a changed official archive requires a reviewed application update |
 | Shortcut unavailable | Choose a different combination in Settings; another app may already own it |
 | Text was not inserted | Return to a supported editable field, keep its text/caret/focus unchanged, and try a new request; inspect the current field before retrying an unverified result |
@@ -154,7 +154,9 @@ The release assets are `Parvathi-Setup-0.2.0-win-x64.exe`, `Parvathi-0.2.0-win-x
 
 ## Verification ledger and manual acceptance
 
-Automated results belong to the exact release commit and its GitHub Actions run. During development, **95 core tests passed**, and the complete WPF application cross-built with **zero warnings and zero errors**. Core tests exercise mode isolation, parsing/validation, app-name ambiguity, request cancellation, duplicate/stale results, and controlled provider responses. Windows adapter tests and package smoke checks cover the native boundaries available to automation. These checks do not establish actual voice accuracy or interaction with a human desktop.
+Automated evidence is tied to its source commit and GitHub Actions run. At commit `113f0bd`, [Windows CI run 36818128535](https://github.com/KrishnaVarun02/Parvathi/actions/runs/36818128535) passed **95 core tests and 23 Windows adapter tests**; **3 interactive tests were skipped**. The same run passed native recognition-library loading, portable-launch checks, and unsigned installer installation, reinstallation, and uninstallation smoke checks. The complete WPF application also cross-built with **zero warnings and zero errors** during development. [macOS CI run 36818128433](https://github.com/KrishnaVarun02/Parvathi/actions/runs/36818128433) passed the existing **33 tests**.
+
+Core tests exercise mode isolation, parsing/validation, app-name ambiguity, request cancellation, duplicate/stale results, and controlled provider responses. Windows adapter and package smoke checks cover the native boundaries available to automation. These results are CI evidence for the named commit, not a claim that a final release is published or that interactive voice acceptance passed. Later release builds must run their own gates from the tagged source. Automated installation and process checks do not establish actual voice accuracy or interaction with a human desktop.
 
 **No interactive Windows machine was available during implementation. Every live check below is Not run, not passed.** Record OS/build/architecture, commit/tag, microphone/output device, editor version, provider/model if used, steps, expected and observed result, and Pass/Fail/Not run. Do not capture API keys or private document content as evidence.
 

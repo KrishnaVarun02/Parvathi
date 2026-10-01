@@ -48,8 +48,14 @@ public partial class App : System.Windows.Application
             if (preview) {
                 Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.ApplicationIdle, () => {
                     dashboard.UpdateLayout();
-                    var bitmap = new RenderTargetBitmap((int)dashboard.ActualWidth, (int)dashboard.ActualHeight, 96, 96, PixelFormats.Pbgra32);
-                    bitmap.Render(dashboard);
+                    var content = (FrameworkElement)dashboard.Content;
+                    var bitmap = new RenderTargetBitmap((int)Math.Ceiling(content.ActualWidth + content.Margin.Left + content.Margin.Right), (int)Math.Ceiling(content.ActualHeight + content.Margin.Top + content.Margin.Bottom), 96, 96, PixelFormats.Pbgra32);
+                    var visual = new DrawingVisual();
+                    using (var drawing = visual.RenderOpen()) {
+                        drawing.DrawRectangle(dashboard.Background, null, new Rect(0, 0, bitmap.PixelWidth, bitmap.PixelHeight));
+                        drawing.DrawRectangle(new VisualBrush(content), null, new Rect(content.Margin.Left, content.Margin.Top, content.ActualWidth, content.ActualHeight));
+                    }
+                    bitmap.Render(visual);
                     var png = new PngBitmapEncoder(); png.Frames.Add(BitmapFrame.Create(bitmap));
                     using (var stream = File.Create(e.Args[1])) png.Save(stream);
                     ExitApp();

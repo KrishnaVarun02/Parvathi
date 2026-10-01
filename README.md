@@ -14,7 +14,7 @@ A native voice assistant for **Windows and macOS**: dictate into other applicati
 | [Portable ZIP](https://github.com/KrishnaVarun02/Parvathi/releases/download/v0.2.0-windows.1/Parvathi-0.2.0-win-x64-portable.zip) | Extract the complete folder and run `Parvathi.exe` |
 | [SHA-256 checksums](https://github.com/KrishnaVarun02/Parvathi/releases/download/v0.2.0-windows.1/SHA256SUMS.txt) | Compare the downloaded files with the published hashes |
 
-The repository is private: sign in to a GitHub account with repository access to download. This is an **unsigned Windows prerelease**; Windows may show an unknown-publisher or SmartScreen warning. Check the release source and checksums; Parvathi does not require Windows security to be disabled.
+The repository and downloads are public; no GitHub account is needed to download the application. This is an **unsigned Windows prerelease**; Windows may show an unknown-publisher or SmartScreen warning. Check the release source and checksums; Parvathi does not require Windows security to be disabled.
 
 The Windows downloads include the .NET runtime and native recognition libraries. End users do not need an SDK, Visual Studio, Python, Node.js, Git, or a development server. On first use, click **Download / repair model** in Settings for the 41,205,931-byte offline model. Choose your microphone, focus an editable Notepad field, hold **Ctrl+Alt+Space**, speak, and release. Keep the destination unchanged until the result appears. **Ctrl+Alt+C** starts/finishes a command; **Ctrl+Alt+A** starts/finishes a question; **Escape** stops active work.
 
