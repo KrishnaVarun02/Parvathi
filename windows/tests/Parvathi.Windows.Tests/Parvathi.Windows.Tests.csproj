@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <OutputType>Exe</OutputType>
+    <StartupObject>Parvathi.Windows.Tests.NativeTestEditor</StartupObject>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="NAudio" Version="2.2.1" />
+    <ProjectReference Include="../../src/Parvathi.Core/Parvathi.Core.csproj" />
+    <!-- Compile the actual adapters; no desktop app startup or hardware dependency in automated tests. -->
+    <Compile Include="../../src/Parvathi.Windows/Services/NativeMethods.cs" Link="Adapters/NativeMethods.cs" />
+    <Compile Include="../../src/Parvathi.Windows/Services/GlobalShortcuts.cs" Link="Adapters/GlobalShortcuts.cs" />
+    <Compile Include="../../src/Parvathi.Windows/Services/FocusService.cs" Link="Adapters/FocusService.cs" />
+    <Compile Include="../../src/Parvathi.Windows/Services/SystemAutomation.cs" Link="Adapters/SystemAutomation.cs" />
+  </ItemGroup>
+</Project>

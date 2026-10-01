@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType><TargetFramework>net10.0-windows</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings><UseWPF>true</UseWPF><UseWindowsForms>true</UseWindowsForms><AssemblyName>Parvathi</AssemblyName>
+    <RootNamespace>Parvathi.Windows</RootNamespace><RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>true</SelfContained><PublishSingleFile>false</PublishSingleFile><PublishTrimmed>false</PublishTrimmed>
+    <ApplicationManifest>app.manifest</ApplicationManifest><ApplicationIcon>Assets/Parvathi.ico</ApplicationIcon>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Parvathi.Core/Parvathi.Core.csproj" />
+    <PackageReference Include="NAudio" Version="2.2.1" />
+    <PackageReference Include="Vosk" Version="0.3.38" />
+    <PackageReference Include="System.Speech" Version="10.0.12" />
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="10.0.12" />
+  </ItemGroup>
+  <ItemGroup><Content Include="Assets/Parvathi.ico" CopyToOutputDirectory="PreserveNewest" /></ItemGroup>
+</Project>

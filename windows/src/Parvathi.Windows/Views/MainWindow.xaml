@@ -1,0 +1,44 @@
+<Window x:Class="Parvathi.Windows.Views.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:Parvathi.Windows.Views" Title="Parvathi" Width="980" Height="780" MinWidth="780" MinHeight="620" WindowStartupLocation="CenterScreen" Icon="/Assets/Parvathi.ico">
+  <Grid Margin="30">
+    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+    <Grid Margin="0,0,0,24"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+      <StackPanel Orientation="Horizontal"><TextBlock Text="∿" FontSize="40" Foreground="{StaticResource AccentBrush}" Margin="0,0,12,0"/><StackPanel><TextBlock Text="Parvathi" FontSize="28" FontWeight="SemiBold"/><TextBlock Text="YOUR VOICE. A LITTLE MORE POSSIBLE." FontSize="10" Foreground="{StaticResource MutedBrush}"/></StackPanel></StackPanel>
+      <StackPanel Grid.Column="1" VerticalAlignment="Center"><TextBlock Text="WINDOWS · PREVIEW 0.2" FontSize="10" Foreground="{StaticResource MutedBrush}"/><TextBlock Text="{Binding Phase}" HorizontalAlignment="Right" Foreground="{StaticResource AccentBrush}" Margin="0,5,0,0"/></StackPanel>
+    </Grid>
+    <TabControl x:Name="Tabs" Grid.Row="1" SelectionChanged="Tabs_SelectionChanged">
+      <TabItem Header="Studio">
+        <ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Margin="8,24,8,12">
+          <TextBlock Text="Less typing. More flow." FontSize="35" FontWeight="SemiBold" Margin="0,0,0,10"/>
+          <TextBlock Text="Speak into your apps, move around Windows, or think out loud with Parvathi." Foreground="{StaticResource MutedBrush}" Margin="0,0,0,20"/>
+          <Border Background="{StaticResource SurfaceBrush}" CornerRadius="14" Padding="20">
+            <StackPanel>
+              <Grid><TextBlock Text="{Binding Phase}" Foreground="{StaticResource AccentBrush}" FontSize="12" FontWeight="Bold"/><TextBlock Text="{Binding Verification}" HorizontalAlignment="Right" Foreground="{StaticResource AccentBrush}"/></Grid>
+              <local:Waveform Height="76" Level="{Binding Level}" Active="{Binding MicActive}" ReducedMotion="{Binding Settings.ReducedMotion}" AutomationProperties.Name="Microphone input level"/>
+              <TextBox Text="{Binding Transcript,Mode=OneWay}" IsReadOnly="True" TextWrapping="Wrap" BorderThickness="0" Background="Transparent" Padding="0" FontSize="17" Margin="0,5,0,12" AutomationProperties.Name="Transcript, select text to copy manually"/>
+              <TextBox Text="{Binding Feedback,Mode=OneWay}" IsReadOnly="True" TextWrapping="Wrap" BorderThickness="0" Background="Transparent" Margin="0" Padding="0" Foreground="{StaticResource MutedBrush}" AutomationProperties.Name="Action feedback"/>
+              <StackPanel Orientation="Horizontal" Margin="0,12,0,0"><Button Content="Finish recording" Click="Finish_Click" IsEnabled="{Binding MicActive}"/><Button Content="Stop · Esc" Click="Stop_Click" IsEnabled="{Binding Busy}"/></StackPanel>
+            </StackPanel>
+          </Border>
+          <UniformGrid Columns="3" Margin="0,18,0,18">
+            <Border Background="{StaticResource SurfaceBrush}" CornerRadius="9" Padding="16" Margin="0,0,8,0"><StackPanel><TextBlock Text="Dictate" FontWeight="SemiBold"/><TextBlock x:Name="DictationShortcut" Text="Ctrl + Alt + Space" Foreground="{StaticResource AccentBrush}" Margin="0,8,0,0"/><TextBlock Text="Hold to speak by default" FontSize="11" Foreground="{StaticResource MutedBrush}" Margin="0,5,0,0"/></StackPanel></Border>
+            <Border Background="{StaticResource SurfaceBrush}" CornerRadius="9" Padding="16" Margin="0,0,8,0"><StackPanel><TextBlock Text="Command" FontWeight="SemiBold"/><TextBlock x:Name="CommandShortcut" Text="Ctrl + Alt + C" Foreground="{StaticResource AccentBrush}" Margin="0,8,0,0"/><TextBlock Text="Press to start / finish" FontSize="11" Foreground="{StaticResource MutedBrush}" Margin="0,5,0,0"/></StackPanel></Border>
+            <Border Background="{StaticResource SurfaceBrush}" CornerRadius="9" Padding="16"><StackPanel><TextBlock Text="Ask" FontWeight="SemiBold"/><TextBlock x:Name="AssistantShortcut" Text="Ctrl + Alt + A" Foreground="{StaticResource AccentBrush}" Margin="0,8,0,0"/><TextBlock Text="Press to start / finish" FontSize="11" Foreground="{StaticResource MutedBrush}" Margin="0,5,0,0"/></StackPanel></Border>
+          </UniformGrid>
+          <TextBlock Text="TRY IT WITH TEXT" FontSize="11" Foreground="{StaticResource MutedBrush}" Margin="0,0,0,8"/>
+          <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="120"/><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+            <ComboBox x:Name="ComposerMode" SelectedIndex="0" Margin="0,5,10,12" AutomationProperties.Name="Text request mode"><ComboBoxItem Content="Command"/><ComboBoxItem Content="Ask"/></ComboBox>
+            <TextBox x:Name="Composer" Grid.Column="1" AutomationProperties.Name="Type a command or question" ToolTip="Try Open Chrome" KeyDown="Composer_KeyDown"/>
+            <Button Grid.Column="2" Content="Send" Click="Send_Click" Margin="10,5,0,12"/>
+          </Grid>
+          <TextBlock Text="First dictation: download the offline model in Settings, choose your microphone, then focus a field in Notepad and use the Dictate shortcut. Keep the same field focused until insertion finishes." Foreground="{StaticResource MutedBrush}" FontSize="12" Margin="0,8,0,0"/>
+        </StackPanel></ScrollViewer>
+      </TabItem>
+      <TabItem Header="Commands"><Grid Margin="8,24,8,0"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition/></Grid.RowDefinitions><TextBlock Text="A few words. Real actions." FontSize="28" FontWeight="SemiBold"/><TextBox x:Name="CommandSearch" Grid.Row="1" Margin="0,18,0,16" TextChanged="CommandSearch_TextChanged" AutomationProperties.Name="Search supported commands"/>
+        <ListBox Grid.Row="2" x:Name="CommandList" Background="Transparent" BorderThickness="0" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled"><ListBox.ItemTemplate><DataTemplate><Border Background="#182028" Padding="18" CornerRadius="10" Margin="0,0,0,10"><StackPanel><TextBlock Text="{Binding Title}" Foreground="#61DFE5" FontSize="12"/><TextBlock Text="{Binding Phrase}" FontSize="18" Margin="0,7"/><TextBlock Text="{Binding Details}" Foreground="#AFBDC7" FontSize="12"/></StackPanel></Border></DataTemplate></ListBox.ItemTemplate></ListBox>
+      </Grid></TabItem>
+      <TabItem Header="Settings" x:Name="SettingsTab"><ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel x:Name="SettingsHost" Margin="8,24,16,12"/></ScrollViewer></TabItem>
+      <TabItem Header="History"><Grid Margin="8,24,8,0"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition/></Grid.RowDefinitions><TextBlock Text="Your recent words" FontSize="28" FontWeight="SemiBold"/><StackPanel Grid.Row="1" Margin="0,12" Orientation="Horizontal"><Button Content="Delete history &amp; clear session" Click="ClearHistory_Click"/><TextBlock Text="Off by default. At most 100 requests." VerticalAlignment="Center" Foreground="{StaticResource MutedBrush}"/></StackPanel><ListBox Grid.Row="2" x:Name="HistoryList" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch"><ListBox.ItemTemplate><DataTemplate><Border Background="#182028" CornerRadius="9" Padding="16" Margin="0,0,0,9"><StackPanel><TextBlock Text="{Binding Mode}" Foreground="#61DFE5"/><TextBlock Text="{Binding Transcript}" Margin="0,7"/><TextBlock Text="{Binding Outcome}" Foreground="#AFBDC7" FontSize="12"/></StackPanel></Border></DataTemplate></ListBox.ItemTemplate></ListBox></Grid></TabItem>
+    </TabControl>
+    <TextBlock Grid.Row="2" Text="Closing this window keeps Parvathi in the system tray. Use the tray's Exit command to quit." Foreground="{StaticResource MutedBrush}" FontSize="11" Margin="8,18,0,0"/>
+  </Grid>
+</Window>

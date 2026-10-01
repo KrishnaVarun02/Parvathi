@@ -1,0 +1,54 @@
+name: Windows build, tests and installer
+
+on:
+  push:
+    branches: ['**']
+    paths: ['windows/**', '.github/workflows/windows*.yml', 'THIRD_PARTY_NOTICES.md', 'docs/WINDOWS.md']
+  pull_request:
+    paths: ['windows/**', '.github/workflows/windows*.yml', 'THIRD_PARTY_NOTICES.md', 'docs/WINDOWS.md']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: windows-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: windows-2025
+    timeout-minutes: 35
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          global-json-file: windows/global.json
+      - name: Restore, test and publish self-contained Windows app
+        run: ./windows/scripts/build.ps1
+      - name: Build pinned installer and portable ZIP
+        run: ./windows/scripts/package.ps1
+      - name: Verify portable runtime and installer lifecycle
+        run: ./windows/scripts/verify-package.ps1
+      - name: Upload packages
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: windows-x64-packages
+          path: windows/artifacts/release/*
+          if-no-files-found: error
+          retention-days: 14
+      - name: Upload diagnostic evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: windows-diagnostics
+          path: |
+            windows/artifacts/test-results/**
+            windows/artifacts/diagnostics/**
+          if-no-files-found: warn
+          retention-days: 14

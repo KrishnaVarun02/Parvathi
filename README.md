@@ -1,14 +1,34 @@
 # Parvathi
 
-A native macOS voice assistant for dictation, a small set of computer commands, and spoken conversation. Built with SwiftUI, AppKit, Apple Speech, Accessibility, CoreAudio, and Keychain. No third-party Swift dependencies.
+A native voice assistant for **Windows and macOS**: dictate into other applications, run a small set of computer commands, and ask questions with spoken replies. The Windows application uses C#/WPF and offline Vosk recognition. The preserved macOS application uses SwiftUI/AppKit, Apple Speech, Accessibility, CoreAudio, and Keychain, with no third-party Swift dependencies.
 
 **The mode is a contract:** saying “open Chrome” in Dictation inserts text. The same phrase in Command mode opens or focuses the installed application. Model output never becomes an executable command.
+
+## Download for Windows 11 x64
+
+**[Windows release and downloads](https://github.com/KrishnaVarun02/Parvathi/releases/tag/v0.2.0-windows.1)**
+
+| Download | Use |
+| --- | --- |
+| [Parvathi Windows installer](https://github.com/KrishnaVarun02/Parvathi/releases/download/v0.2.0-windows.1/Parvathi-Setup-0.2.0-win-x64.exe) | Double-click, install for your user, then open Parvathi from Start |
+| [Portable ZIP](https://github.com/KrishnaVarun02/Parvathi/releases/download/v0.2.0-windows.1/Parvathi-0.2.0-win-x64-portable.zip) | Extract the complete folder and run `Parvathi.exe` |
+| [SHA-256 checksums](https://github.com/KrishnaVarun02/Parvathi/releases/download/v0.2.0-windows.1/SHA256SUMS.txt) | Compare the downloaded files with the published hashes |
+
+The repository is private: sign in to a GitHub account with repository access to download. This is an **unsigned Windows prerelease**; Windows may show an unknown-publisher or SmartScreen warning. Check the release source and checksums; Parvathi does not require Windows security to be disabled.
+
+The Windows downloads include the .NET runtime and native recognition libraries. End users do not need an SDK, Visual Studio, Python, Node.js, Git, or a development server. On first use, click **Download / repair model** in Settings for the 41,205,931-byte offline model. Choose your microphone, focus an editable Notepad field, hold **Ctrl+Alt+Space**, speak, and release. Keep the destination unchanged until the result appears. **Ctrl+Alt+C** starts/finishes a command; **Ctrl+Alt+A** starts/finishes a question; **Escape** stops active work.
+
+Verbatim dictation and computer commands need no paid AI key. Polished text, Ask, Rewrite, and Explain require a configured OpenAI account or a separately running Ollama model. Self-contained packaging does not make optional cloud AI offline.
+
+See **[Windows setup, privacy, architecture, troubleshooting, and acceptance checklist](docs/WINDOWS.md)** and the **[updated interview guide](docs/Parvathi-Interview-Guide.pdf)**. Live Windows microphone, cross-application, and authenticated-provider checks remain explicitly unverified; compiled code and CI tests are not a substitute for those checks.
+
+The sections below describe the macOS application; Windows commands and platform-specific behavior are documented in the Windows guide.
 
 ![Parvathi native SwiftUI dashboard](docs/dashboard.png)
 
 *Native SwiftUI view render. Interaction verification is recorded separately below.*
 
-## Get running
+## macOS: get running
 
 Requirements: macOS 14+, Apple Command Line Tools with Swift 6.0 or later, and a microphone. Development used Apple Silicon, macOS 26.6, and Swift 6.4 in Swift 5 language mode. The package builds for the current architecture; cross-architecture and older-OS runtime validation remain release work.
 
@@ -151,7 +171,7 @@ Build checks and automated routing, validation, request-ownership, and service t
 
 Current limitations:
 
-- macOS only; distribution and older supported OS versions need validation.
+- The macOS build still needs distribution and older-supported-OS validation. Windows 11 x64 is a separate native prerelease; ARM64 Windows and live Windows acceptance testing remain pending.
 - Apple Speech availability and accuracy vary by locale, device, and service. Each session is bounded.
 - Strict Accessibility checks intentionally exclude editors that hide field values or selected ranges; remote desktops and custom controls may be incompatible.
 - Input device selection uses macOS Settings, rather than per-app routing.

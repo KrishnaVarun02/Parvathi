@@ -1,0 +1,18 @@
+{
+  "MicrophoneDevice": -1,
+  "ModelPath": "",
+  "HandsFree": false,
+  "SpeakResponses": true,
+  "KeepHistory": false,
+  "ReducedMotion": false,
+  "StartWithWindows": false,
+  "Voice": "",
+  "Style": "Verbatim",
+  "Provider": "OpenAI",
+  "BaseUrl": "https://api.openai.com/v1",
+  "Model": "gpt-6-astra",
+  "HotkeyModifiers": 3,
+  "DictationKey": 32,
+  "CommandKey": 67,
+  "AssistantKey": 65
+}

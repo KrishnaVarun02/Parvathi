@@ -9,3 +9,10 @@ dist/
 work/
 .venv-docs/
 __pycache__/
+**/bin/
+**/obj/
+.vs/
+**/TestResults/
+*.pfx
+*.p12
+windows/artifacts/

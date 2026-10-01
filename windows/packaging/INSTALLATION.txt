@@ -1,0 +1,11 @@
+Parvathi for Windows 11 x64
+
+This installer includes the application and its .NET desktop runtime. You do not need developer tools or a separate runtime installation. Installation is per-user and does not require administrator privileges.
+
+Close Parvathi from its tray menu before upgrading or uninstalling. Existing personal settings, the speech model, history and protected credentials are preserved. Clear history and remove the saved AI key in Settings before uninstalling if you want to delete those items.
+
+At first launch, open Settings and explicitly download the offline English speech model (approximately 41 MB). Dictation and computer commands require no AI key. Questions, explanations and polished rewriting use the AI provider you configure and may send text to that provider. A local Ollama server is optional and separately installed. Raw microphone audio is not saved by default.
+
+Use the global Dictate shortcut while the intended text field is focused. Keep the destination and selection unchanged until insertion. Unsupported or protected fields are refused. Escape stops active recording, pending work and speech; it cannot undo an action already delivered to Windows.
+
+This is a prerelease. See the GitHub release notes for its actual signing status, automatic test results and remaining manual verification. An unsigned build may trigger SmartScreen warnings. Keep Windows security enabled and verify that downloads came from the intended repository.

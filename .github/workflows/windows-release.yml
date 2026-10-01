@@ -1,0 +1,112 @@
+name: Windows GitHub Release
+
+on:
+  push:
+    tags: ['v*-windows.*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing Windows release tag (built from its exact commit)
+        required: true
+        default: v0.2.0-windows.1
+
+permissions:
+  contents: read
+
+concurrency:
+  group: windows-release-${{ inputs.tag || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: windows-2025
+    timeout-minutes: 35
+    outputs:
+      tag: ${{ steps.source.outputs.tag }}
+      version: ${{ steps.source.outputs.version }}
+      commit: ${{ steps.source.outputs.commit }}
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify exact tagged source
+        id: source
+        env:
+          REQUESTED_TAG: ${{ inputs.tag || github.ref_name }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($env:REQUESTED_TAG -notmatch '^v(?<version>\d+\.\d+\.\d+)-windows\.\d+$') { throw 'Invalid Windows release tag.' }
+          $version = $Matches.version
+          $commit = (git rev-parse HEAD).Trim()
+          $tagCommit = (git rev-parse "refs/tags/$env:REQUESTED_TAG^{commit}").Trim()
+          if ($LASTEXITCODE -ne 0 -or $tagCommit -ne $commit) { throw 'Checkout differs from the release tag.' }
+          $configured = ([xml](Get-Content windows/Directory.Build.props)).Project.PropertyGroup.Version
+          if ($configured -ne $version) { throw 'Tag version differs from Directory.Build.props.' }
+          "tag=$env:REQUESTED_TAG" >> $env:GITHUB_OUTPUT
+          "version=$version" >> $env:GITHUB_OUTPUT
+          "commit=$commit" >> $env:GITHUB_OUTPUT
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          global-json-file: windows/global.json
+      - name: Restore, test and publish
+        env:
+          APP_VERSION: ${{ steps.source.outputs.version }}
+        run: ./windows/scripts/build.ps1 -Version $env:APP_VERSION
+      - name: Package and optionally sign
+        env:
+          APP_VERSION: ${{ steps.source.outputs.version }}
+          WINDOWS_SIGNING_CERT_BASE64: ${{ secrets.WINDOWS_SIGNING_CERT_BASE64 }}
+          WINDOWS_SIGNING_PASSWORD: ${{ secrets.WINDOWS_SIGNING_PASSWORD }}
+          WINDOWS_SIGNING_TIMESTAMP_URL: ${{ vars.WINDOWS_SIGNING_TIMESTAMP_URL }}
+        run: ./windows/scripts/package.ps1 -Version $env:APP_VERSION
+      - name: Verify runtime and installation lifecycle
+        env:
+          APP_VERSION: ${{ steps.source.outputs.version }}
+        run: ./windows/scripts/verify-package.ps1 -Version $env:APP_VERSION
+      - name: Upload gated release assets
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: windows-release-assets
+          path: windows/artifacts/release/*
+          if-no-files-found: error
+          retention-days: 14
+      - name: Upload diagnostic evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: windows-release-diagnostics
+          path: |
+            windows/artifacts/test-results/**
+            windows/artifacts/diagnostics/**
+          if-no-files-found: warn
+          retention-days: 14
+
+  publish:
+    needs: build
+    runs-on: windows-2025
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.build.outputs.tag }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: windows-release-assets
+          path: windows/artifacts/release
+      - name: Publish verified prerelease without overwriting existing releases
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ needs.build.outputs.tag }}
+          SOURCE_COMMIT: ${{ needs.build.outputs.commit }}
+        run: ./windows/scripts/publish-release.ps1 -Tag $env:RELEASE_TAG -ExpectedCommit $env:SOURCE_COMMIT -AssetDirectory windows/artifacts/release

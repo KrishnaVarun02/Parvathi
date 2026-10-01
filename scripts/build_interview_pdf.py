@@ -27,7 +27,7 @@ class Guide:
         self.c = canvas.Canvas(str(path), pagesize=(W,H), pageCompression=1)
         self.c.setTitle('Parvathi - From Scratch to Interview')
         self.c.setAuthor('Parvathi project documentation')
-        self.c.setSubject('Native macOS voice assistant: architecture, safety, setup, and interview Q&A')
+        self.c.setSubject('Native macOS and Windows voice assistant: architecture, safety, setup, releases, and interview Q&A')
         self.page = 0
         self.y = H-100
         self.heights = []
@@ -76,8 +76,8 @@ class Guide:
         c=self.c
         c.setStrokeColor(colors.HexColor('#DAE4E8')); c.line(LEFT,45,RIGHT,45)
         c.setFillColor(MUTED); c.setFont('Helvetica',8)
-        c.drawString(LEFT,31,'Parvathi v0.1.0  |  macOS MVP  |  01 October 2026')
-        c.drawRightString(RIGHT,31,f'{self.page:02d} / 11')
+        c.drawString(LEFT,31,'Parvathi  |  macOS + Windows preview  |  01 October 2026')
+        c.drawRightString(RIGHT,31,f'{self.page:02d} / 15')
         self.heights.append((self.page,round(self.y,1)))
         c.showPage()
 
@@ -111,7 +111,7 @@ class Guide:
 
     def save(self):
         self.end()
-        if self.page != 11: raise ValueError('Expected exactly 11 pages')
+        if self.page != 15: raise ValueError('Expected exactly 15 pages')
         self.c.save()
         print(f'Created {self.path} ({self.page} pages); bottom positions: {self.heights}')
 
@@ -119,18 +119,18 @@ def build(path):
     path.parent.mkdir(parents=True,exist_ok=True)
     g=Guide(path)
     g.start(1,'Your voice, working with you.','An interview-ready explanation of Parvathi, from first principles to the important engineering tradeoffs.')
-    g.callout('THE 30-SECOND PITCH', 'Parvathi is a native macOS assistant that lets you dictate into another app, issue a small set of computer commands, and ask questions with spoken replies. It separates dictation from execution, validates actions before dispatch, and checks results wherever macOS exposes reliable evidence.')
+    g.callout('THE 30-SECOND PITCH', 'Parvathi is a native voice assistant for macOS and Windows. It lets you dictate into another app, issue a small set of computer commands, and ask questions with spoken replies. It separates dictation from execution, validates actions before dispatch, and checks results wherever the operating system exposes reliable evidence.')
     g.qa('What problem does it solve?','Switching between typing, launching applications, searching, and changing small settings interrupts a working session. Parvathi provides explicit voice modes and a compact feedback panel so those tasks can start with a shortcut and finish without navigating a large interface.')
-    g.qa('What did you actually build?','A Swift Package with a native SwiftUI menu-bar application, a floating AppKit panel, live Apple Speech transcription, macOS Accessibility insertion, native application and volume control, configurable OpenAI or Ollama text generation, Keychain credentials, and native spoken output. The app contains real integrations rather than simulated command results.')
+    g.qa('What did you actually build?','The Mac application uses SwiftUI/AppKit, Apple Speech, Accessibility, CoreAudio, Keychain, and native speech. A separate Windows C#/WPF application uses offline Vosk recognition, Windows accessibility and audio APIs, DPAPI, and SAPI speech. Both use explicit modes and optional OpenAI or Ollama text generation. Windows has self-contained installer and portable packaging.')
     g.qa('What is the most important design decision?','The user chooses the mode before recording. In Dictation, "open Chrome" remains text. Only Command mode reaches the typed action registry. AI output is used for conversation or editing; it never becomes a shell command or an automatically executed action.')
-    g.qa('How should I present the project honestly?','Describe it as a runnable macOS MVP. Build and unit-test evidence are different from live microphone and cross-application evidence. The manual checklist records the latter. Do not claim broad editor compatibility, perfect speech accuracy, live web answers, or production distribution readiness.')
-    g.p('<b>Reading map:</b> pages 2-4 explain the system; pages 5-8 cover algorithms and safety; pages 9-10 prepare a demonstration; page 11 supplies concise interview answers.',SMALL)
+    g.qa('How should I present the project honestly?','Describe the native Mac MVP and Windows prerelease separately. Build and unit-test evidence are different from live microphone and cross-application evidence. Windows interactive checks remain unperformed. Do not claim broad editor compatibility, perfect speech accuracy, live web answers, a signed Windows release, or production distribution readiness.')
+    g.p('<b>Reading map:</b> pages 2-11 explain the original macOS implementation. Pages 12-15 explain the Windows architecture, privacy, installation, GitHub release workflow, and interview demonstration.',SMALL)
 
     g.start(2,'Explain it from scratch.','The beginner-friendly model: ears, a switchboard, hands, and a voice.')
     g.qa('What is speech recognition?','It turns an incoming microphone signal into words. AVAudioEngine produces small audio buffers. SFSpeechAudioBufferRecognitionRequest receives them, and Apple Speech returns partial text followed by a final transcription. The app does not save an audio recording to disk.')
     g.qa('What does the language model do?','It answers questions, polishes dictation, rewrites a selection, or explains selected text. It is not necessary for verbatim dictation or the supported commands. An AIProvider protocol keeps the caller independent of the OpenAI and Ollama HTTP formats.')
     g.qa('How does the assistant control the Mac?','It calls specific native APIs. NSWorkspace opens applications and websites. CoreAudio adjusts volume and mute state. Accessibility identifies text fields and inserts text; a guarded clipboard fallback can send paste to the captured process. No generated shell script sits between the transcript and the operating system.')
-    g.qa('Why SwiftUI and AppKit instead of a web shell?','The development machine is a Mac, and the most sensitive integrations are native: menu-bar behavior, microphone permissions, keyboard shortcuts, Accessibility, Keychain, and audio devices. SwiftUI handles the interface while narrowly scoped AppKit code handles the floating panel and system integration. The tradeoff is that this release targets macOS only.')
+    g.qa('Why SwiftUI and AppKit instead of a web shell?','The first development machine was a Mac, and the most sensitive integrations are native: menu-bar behavior, permissions, shortcuts, Accessibility, Keychain, and audio devices. SwiftUI handles the interface and AppKit handles the floating panel. These frameworks do not run on Windows, so that platform has a separate C#/WPF implementation described on pages 12-15.')
     g.qa('What is the difference between a mode and an intent?','Mode is the user-selected interaction contract: dictate, command, ask, rewrite, or explain. Intent is a validated action within Command mode, such as setVolume(30). Keeping these separate prevents a phrase inside a paragraph from unexpectedly launching an application.')
     g.callout('A CONCRETE EXAMPLE','Hold Control-Option-Space in TextEdit and say "open Chrome" to insert those words. Press Control-Option-C to start a command recording, say the same words, then press it again to request the installed Chrome application.')
 
@@ -223,6 +223,45 @@ def build(path):
         ('Ollama chat endpoint','https://docs.ollama.com/api/chat')]
     for title,url in references:
         g.p(f'<link href="{url}" color="#007E91">{title}</link> - <font size="8">{escape(url)}</font>',SMALL,after=5)
+    g.start(12,'Why a separate Windows app?','Keep the same product contract while using the operating system APIs that actually exist.')
+    g.qa('Why C#, .NET, and WPF?','Windows requires native tray, keyboard, audio, accessibility, and secure-storage integration. WPF provides a native desktop UI while C# calls Windows APIs directly. The project pins .NET SDK 10.0.401 and runtime 10.0.12. The Mac source remains in its existing Swift targets; the Windows source lives under windows/.')
+    g.qa('Which layers are shared conceptually?','Both implementations separate recognition, reasoning, speech output, focus validation, and operating-system actions. Windows uses IRecognitionService, IAIProvider, ISpeechOutput, IFocusService, and ISystemAutomation. Typed actions and explicit modes preserve the safety contract without attempting to compile Apple frameworks for Windows.')
+    g.qa('How does offline dictation work?','NAudio records 16 kHz, 16-bit mono PCM in short-lived buffers. Vosk turns the buffers into partial words, finalized segments, and a final result. No raw audio file is saved. Users explicitly download the English recognition model once. Basic transcription then needs no paid API key or separately running model server.')
+    g.qa('What protects the model download?','The official archive is 41,205,931 bytes. The installer checks its exact size and pinned SHA-256, rejects unsafe archive paths and links, bounds extraction, and installs from a staging directory. A per-file manifest supports integrity checks before recognition. Network failures and cancellation remove scratch downloads.')
+    g.qa('How do you insert into the correct Windows field?','Capture foreground process and window, focused UI Automation element, document text, selection, and focus revision. Revalidate everything immediately before dispatch. Address a compatible native Edit/RichEdit control or ValuePattern directly. If the field cannot be verified or addressed safely, refuse insertion and retain the visible transcript.')
+    g.callout('A DELIBERATE WINDOWS TRADEOFF','The Windows adapter does not touch the clipboard or send a blind paste shortcut. This preserves every clipboard format but limits editor compatibility. Notepad and compatible accessible fields are the first acceptance targets; actual Notepad voice interaction still needs an interactive Windows test.')
+
+    g.start(13,'Windows privacy and interruption.','Explain the microphone, credentials, provider boundary, and cancellation without overclaiming.')
+    g.qa('Where does my information go?','Microphone audio stays in memory and the local Vosk decoder. The first model download contacts alphacephei.com; it does not upload speech. Optional AI modes send text and bounded context to the configured provider. A remote endpoint receives that data remotely; local Ollama requires its own running model server. There is no screenshot or retrieval tool.')
+    g.qa('How are Windows credentials stored?','The OpenAI-provider key is encrypted with DPAPI scoped to the current Windows user and saved in the local profile. It is separate from nonsecret settings and never sent to Ollama. A configurable OpenAI-compatible endpoint receives that credential, so the user must intentionally trust the selected endpoint. No key belongs in source, logs, or installer assets.')
+    g.qa('Where are settings and history?','Under %LOCALAPPDATA%\\Parvathi. Settings are JSON; the credential is encrypted; the recognition model has its own directory. History is off by default and limited to 100 bounded entries when enabled. History itself is not separately encrypted. Disabling history or selecting Delete history clears it; removing the credential is a separate setting.')
+    g.qa('Does self-contained mean completely offline?','No. It means the Windows executable ships with its .NET runtime and required native libraries. Local recognition works offline after model installation, and Windows SAPI speaks locally. Optional OpenAI requires network access and an account. Ollama needs a separately installed server and model. These are distinct deployment and privacy questions.')
+    g.qa('How does Escape stop the pipeline?','The coordinator invalidates the request and propagates cancellation. Microphone stop uses a separate lock, avoiding a wait behind native decoding. A canceled native model load is fenced from starting capture afterward. Provider calls are canceled, late results are rejected, and SAPI cancels the specific active prompt. Native effects already dispatched cannot be rolled back.')
+    g.qa('Which controls prevent prompt injection?','Dictation never routes to commands. Commands use a small validated registry. AI responses, selected text, and document excerpts are data and cannot invoke the executor. Password fields, protected targets, and elevated applications are refused. There are no arbitrary scripts, file deletion, messages, purchases, or sensitive-setting tools.')
+
+    g.start(14,'Download, build, and release.','A real Windows application must survive the trip from source code to another person\'s computer.')
+    g.qa('How does an end user install it?','Open the repository Releases page using an account with access, download Parvathi-Setup-0.2.0-win-x64.exe, run the per-user installer, and open Parvathi from Start. Alternatively, extract the complete portable ZIP and run Parvathi.exe. No SDK, Visual Studio, Python, Node.js, Git, or terminal is required for normal use.')
+    g.qa('What is required on first launch?','Download the offline English model in Settings and select a microphone. Allow desktop microphone access in Windows privacy settings. Focus an editable field, hold Ctrl+Alt+Space, speak, and release. Ctrl+Alt+C controls command recording; Ctrl+Alt+A controls Ask. Escape and Stop interrupt active requests. Closing the dashboard leaves the tray app running.')
+    g.qa('What makes the package self-contained?','The publish folder includes the .NET desktop runtime, application assemblies, icons, and all Vosk native DLLs. Inno Setup creates the per-user installer and normal uninstall entry; a ZIP contains the same runnable folder. Keep the complete folder together. Startup with Windows is optional. Upgrades and uninstall preserve the user profile as documented.')
+    g.qa('How can a developer rebuild it?','Use Windows and the SDK pinned in windows/global.json. The scripts restore locked dependencies, build, run tests, publish win-x64, install the pinned installer compiler, and create the package. macOS can compile many checks, but Windows GitHub Actions builds the release and performs available Windows checks.')
+    g.code(['pwsh ./windows/scripts/build.ps1','pwsh ./windows/scripts/install-inno.ps1','pwsh ./windows/scripts/package.ps1 -Version 0.2.0'])
+    g.qa('How is the release trustworthy?','The release workflow builds the exact tag, requires successful checks, generates SHA-256 checksums, and uploads real installer and ZIP assets to GitHub Releases. The repository stays private. Optional signing uses GitHub secrets. Without a certificate, this is explicitly an unsigned prerelease; it must not be described as trusted by Windows or as having SmartScreen reputation.')
+    g.p('<link href="https://github.com/KrishnaVarun02/Parvathi/releases/tag/v0.2.0-windows.1" color="#007E91">Windows release: v0.2.0-windows.1</link> | Windows 11 x64 | Read the release notes and checksums before installing.',SMALL)
+
+    g.start(15,'Defend the Windows implementation.','Interview questions, a short demonstration, and the limits of the current evidence.')
+    g.qa('What has been tested so far?','Development passed 95 C# core tests and cross-built the complete WPF application with zero warnings and errors. The Windows CI record adds adapter and packaging checks for the release commit. These results do not prove microphone quality or cross-application behavior. No interactive Windows desktop was available; live voice acceptance remains Not run.')
+    g.qa('What should the Windows demonstration show?','Install on a clean Windows 11 x64 machine, dictate a paragraph into Notepad, then dictate "open Chrome" without launching it. Say the same phrase in Command mode to open or focus installed Chrome. Change focus during transcription and show refusal. Interrupt recording, a provider request, and speech with Escape. Verify clipboard content remains unchanged.')
+    g.qa('What failures would you deliberately demonstrate?','Missing model, disconnected or denied microphone, an ambiguous app name, unavailable Chrome, an unsupported text control, an elevated target, a missing API key, and a network failure. The app must give useful recovery text and must never label a simulated or uncertain action as completed. Test upgrades and normal uninstall separately.')
+    g.qa('Why not make every editor work with a paste shortcut?','A universal-looking fallback can type into the wrong place when focus changes or a control hides its selection. This implementation uses addressable text controls and verification. Compatibility is narrower, but the refusal is honest. Expand coverage with evidence from specific editor versions before loosening the boundary.')
+    g.qa('What would you improve after the prerelease?','First collect live Windows acceptance evidence and recognition latency measurements. Then test more editors, improve multilingual recognition, and provide signed distribution. Native ARM64 needs compatible dependencies. Wake words, retrieval, visible screen capture, and bounded multi-step planning remain separate future features.')
+    g.p('WINDOWS OFFICIAL REFERENCES',QUESTION,after=7)
+    for title,url in [
+        ('WPF and desktop UI','https://learn.microsoft.com/en-us/dotnet/desktop/wpf/overview/'),
+        ('Self-contained .NET deployment','https://learn.microsoft.com/en-us/dotnet/core/deploying/'),
+        ('Vosk models and licenses','https://alphacephei.com/vosk/models'),
+        ('Windows DPAPI','https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.protecteddata'),
+        ('GitHub Releases','https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository')]:
+        g.p(f'<link href="{url}" color="#007E91">{title}</link>',SMALL,after=4)
     g.save()
 
 if __name__=='__main__':
