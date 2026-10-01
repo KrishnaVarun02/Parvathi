@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+<key>CFBundleExecutable</key><string>Parvathi</string>
+<key>CFBundleIdentifier</key><string>dev.parvathi.assistant</string>
+<key>CFBundleName</key><string>Parvathi</string>
+<key>CFBundleDisplayName</key><string>Parvathi</string>
+<key>CFBundlePackageType</key><string>APPL</string>
+<key>CFBundleShortVersionString</key><string>0.1.0</string>
+<key>CFBundleVersion</key><string>1</string>
+<key>LSMinimumSystemVersion</key><string>14.0</string>
+<key>LSUIElement</key><true/>
+<key>NSPrincipalClass</key><string>NSApplication</string>
+<key>NSMicrophoneUsageDescription</key><string>Parvathi uses the microphone only when you start dictation or a voice request.</string>
+<key>NSSpeechRecognitionUsageDescription</key><string>Parvathi transcribes your voice. On-device recognition is preferred; Apple processing is used only if you enable it in Settings.</string>
+</dict></plist>

@@ -1,0 +1,24 @@
+name: macOS build and tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: macos-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Show Swift toolchain
+        run: swift --version
+      - name: Build and test
+        run: ./scripts/test.sh
+      - name: Build release executable
+        run: swift build --build-system native --configuration release
