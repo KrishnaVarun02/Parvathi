@@ -20,7 +20,7 @@ The Windows downloads include the .NET runtime and native recognition libraries.
 
 Verbatim dictation and computer commands need no paid AI key. Polished text, Ask, Rewrite, and Explain require a configured OpenAI account or a separately running Ollama model. Self-contained packaging does not make optional cloud AI offline.
 
-See **[Windows setup, privacy, architecture, troubleshooting, and acceptance checklist](docs/WINDOWS.md)** and the **[updated interview guide](docs/Parvathi-Interview-Guide.pdf)**. Live Windows microphone, cross-application, and authenticated-provider checks remain explicitly unverified; compiled code and CI tests are not a substitute for those checks.
+See **[Windows setup, privacy, architecture, troubleshooting, and acceptance checklist](docs/WINDOWS.md)**. Live Windows microphone, cross-application, and authenticated-provider checks remain explicitly unverified; compiled code and CI tests are not a substitute for those checks.
 
 ![Parvathi Windows WPF dashboard](docs/windows-dashboard.png)
 
